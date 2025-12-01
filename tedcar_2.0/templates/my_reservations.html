@@ -11,7 +11,7 @@
 
     <div class="grid grid-2">
         {% for r in reservations %}
-        <div class="card">
+        <div class="card" id="reservation-{{ r.id }}" data-res-id="{{ r.id }}">
             <div class="card-body">
                 <div class="flex justify-between items-center mb-md">
                     <h3 class="card-title">Reserva #{{ r.id }}</h3>
@@ -22,14 +22,37 @@
                 <p class="mb-lg" style="font-size: 1.2rem; color: var(--secondary-color); font-weight: 600;">Total: R$
                     {{ r.total_price }}</p>
 
-                <a href="{{ url_for('cancel_reservation', id=r.id) }}"
-                    class="btn btn-outline btn-danger w-full text-center"
-                    onclick="return confirm('Tem certeza que deseja cancelar?')">
-                    Cancelar Reserva
-                </a>
+                <form class="cancel-form" method="post" action="{{ url_for('cancel_reservation', id=r.id) }}">
+                    <button type="submit" class="btn btn-outline btn-danger" style="width:100%;">Cancelar Reserva</button>
+                </form>
             </div>
         </div>
         {% endfor %}
     </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.cancel-form').forEach(function(form){
+            form.addEventListener('submit', async function(e){
+                e.preventDefault();
+                if(!confirm('Tem certeza que deseja cancelar?')) return;
+                const url = form.action;
+                try{
+                    const resp = await fetch(url, {method: 'POST', headers: {'X-Requested-With':'XMLHttpRequest'}});
+                    if(!resp.ok) throw new Error('Resposta da rede não OK');
+                    const data = await resp.json();
+                    if(data && data.status === 'ok'){
+                        const el = document.getElementById('reservation-' + data.id);
+                        if(el) el.remove();
+                    } else {
+                        alert((data && data.message) ? data.message : 'Erro ao cancelar reserva');
+                    }
+                } catch(err){
+                    alert('Erro ao cancelar reserva: ' + err.message);
+                }
+            });
+        });
+    });
+    </script>
 </div>
 {% endblock %}

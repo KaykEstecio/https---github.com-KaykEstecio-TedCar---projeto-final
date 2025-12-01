@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from flask import Flask, render_template, redirect, url_for, request, flash, session, abort
+from flask import Flask, render_template, redirect, url_for, request, flash, session, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -241,7 +241,7 @@ def reserve(car_id):
 
     return render_template('reservation.html', car=car)
 
-@app.route('/cancel_reservation/<int:id>')
+@app.route('/cancel_reservation/<int:id>', methods=['GET', 'POST'])
 @login_required
 def cancel_reservation(id):
     res = Reservation.query.get_or_404(id)
@@ -251,6 +251,11 @@ def cancel_reservation(id):
 
     res.status = 'cancelled'
     db.session.commit()
+
+    # If the request came from AJAX (fetch), return JSON so the client can update UI
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.is_json:
+        return jsonify({'status': 'ok', 'message': 'Reserva cancelada.', 'id': id})
+
     flash("Reserva cancelada.", "success")
     return redirect(url_for('my_reservations'))
 

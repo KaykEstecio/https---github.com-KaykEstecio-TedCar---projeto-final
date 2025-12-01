@@ -398,6 +398,72 @@ img {
     color: var(--text-heading);
 }
 
+/* Reservation page tweaks */
+.reservation-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-lg);
+    align-items: start;
+}
+
+.reservation-summary {
+    position: sticky;
+    top: 96px;
+}
+
+.date-row {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.date-row .form-control {
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .reservation-grid {
+        grid-template-columns: 1fr;
+    }
+    .reservation-summary {
+        position: static;
+    }
+}
+
+.card.card-body { /* small padding tweak for nested card body */
+    padding: 12px;
+}
+
+/* Reservation CTA and visual tweaks */
+.reservation-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: calc(var(--radius-md));
+    margin-bottom: var(--spacing-sm);
+    border: 1px solid var(--border-color);
+}
+
+/* Accent CTA used only inside the reservation page */
+.reservation-grid .btn-accent {
+    display: inline-flex;
+    background-color: var(--accent-color);
+    color: #0b1220;
+    border-color: transparent;
+    box-shadow: var(--shadow-sm);
+}
+.reservation-grid .btn-accent:hover {
+    background-color: #d97706; /* slightly darker amber */
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Soften buttons and cards only on reservation page */
+.reservation-grid .btn,
+.reservation-grid .card {
+    border-radius: calc(var(--radius-lg));
+}
+
+
 .table tr:last-child td {
     border-bottom: none;
 }

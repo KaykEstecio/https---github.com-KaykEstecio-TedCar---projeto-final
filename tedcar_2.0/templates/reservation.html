@@ -1,10 +1,66 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1 style="color:var(--primary-color);">Confirmar Reserva</h1>
+<div class="container section">
+	<div class="reservation-grid">
+		<div>
+			<div class="card">
+				<div class="card-body">
+					<h1 class="card-title" style="color:var(--secondary-color);">Confirmar Reserva</h1>
+					<p class="card-text">Revise os detalhes da reserva e confirme abaixo.</p>
 
-<p>Se você abriu esta página sem preencher as datas, volte para a página do carro.</p>
+					{% if not start_date or not end_date %}
+						<div class="alert alert-error">Se você abriu esta página sem preencher as datas, volte para a página do carro.</div>
+					{% endif %}
 
-<a class="btn" href="{{ url_for('cars') }}">Voltar aos carros</a>
+					<form method="post" action="{{ url_for('confirm_reservation', car_id=car.id) if car else '' }}">
+						<div class="form-group">
+							<label class="form-label">Carro</label>
+							<div class="card card-body" style="padding:12px;">
+								<img class="reservation-image" src="{{ (car.image_url if car and car.image_url else 'https://via.placeholder.com/600x400?text=Sem+imagem') }}" alt="{{ car.name if car else 'Veículo' }}">
+								<strong>{{ car.name if car else '—' }}</strong>
+								<p class="card-text" style="margin:6px 0;">{{ car.description if car else '' }}</p>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="form-label">Período</label>
+							<div class="flex date-row">
+								<input class="form-control" type="date" name="start" value="{{ start_date or '' }}">
+								<input class="form-control" type="date" name="end" value="{{ end_date or '' }}">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="form-label">Observações (opcional)</label>
+							<textarea class="form-control" name="notes" rows="3" placeholder="Alguma observação sobre a reserva..."></textarea>
+						</div>
+
+						<div class="flex gap-md justify-between" style="margin-top:12px;">
+							<a class="btn btn-outline" href="{{ url_for('cars') }}">Voltar aos carros</a>
+							<button class="btn btn-accent" type="submit">Confirmar Reserva</button>
+						</div>
+					</form>
+
+				</div>
+			</div>
+		</div>
+
+		<div>
+			<div class="card reservation-summary">
+				<div class="card-body">
+					<h3 class="card-title">Resumo da Reserva</h3>
+					<p class="card-text">Preço diário: <strong>{{ car.price if car else '—' }}</strong></p>
+					<p class="card-text">Período: <strong>{{ start_date or '—' }} — {{ end_date or '—' }}</strong></p>
+					<p class="card-text">Total estimado: <strong>{{ total or '—' }}</strong></p>
+					<p class="card-text">Local de retirada: <strong>{{ pickup or '—' }}</strong></p>
+					<div style="margin-top:12px;">
+						<a class="btn btn-secondary" href="{{ url_for('my_reservations') }}">Minhas Reservas</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 {% endblock %}
