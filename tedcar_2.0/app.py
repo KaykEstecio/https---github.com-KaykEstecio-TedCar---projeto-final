@@ -66,12 +66,8 @@ class Log(db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     if user_id == 'MASTER':
-        # Create a transient user object for Master Key
-        # We use a plain class or just the User model but we can't set properties that are read-only on UserMixin
-        # UserMixin properties (is_authenticated, etc) return True/False based on methods, but default is True for is_authenticated.
+        
         u = User(id=0, username=MASTER_USER, is_admin=True)
-        # We don't need to set is_authenticated = True, UserMixin does it.
-        # We need to ensure get_id returns 'MASTER'
         u.get_id = lambda: 'MASTER'
         return u
     return User.query.get(int(user_id))
