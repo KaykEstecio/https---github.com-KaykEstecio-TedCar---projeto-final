@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1 style="color:var(--primary-color);">Confirmar Reserva</h1>
+
+<p>Se você abriu esta página sem preencher as datas, volte para a página do carro.</p>
+
+<a class="btn" href="{{ url_for('cars') }}">Voltar aos carros</a>
+
+{% endblock %}

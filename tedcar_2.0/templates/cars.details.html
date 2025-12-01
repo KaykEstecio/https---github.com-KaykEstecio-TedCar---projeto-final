@@ -1,0 +1,16 @@
+<h3 style="color:var(--text-color);">Escolha datas</h3>
+
+<form method="POST" action="{{ url_for('reserve', car_id=car.id) }}">
+    <label style="color:var(--text-color);">Início</label><br>
+    <input type="date" name="start_date" required style="padding:8px; border-radius:6px; margin-bottom:8px;"><br>
+    <label style="color:var(--text-color);">Fim</label><br>
+    <input type="date" name="end_date" required style="padding:8px; border-radius:6px; margin-bottom:8px;"><br>
+
+    <button class="btn" type="submit" style="width:auto;">Reservar</button>
+</form>
+</div>
+
+</div>
+</div>
+
+{% endblock %}
